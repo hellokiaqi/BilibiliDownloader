@@ -1,4 +1,30 @@
-## UPDATE
+# 更新记录（Changelog）
+
+本仓库 fork 自 [nICEnnnnnnnLee/BilibiliDown](https://github.com/nICEnnnnnnnLee/BilibiliDown)（基于上游 `V6.40`），以下先列出本分支的新增改动，随后保留上游完整版本历史供查阅。
+
+## 本分支新增与改进（基于 V6.40）
+
+* **界面与交互重设计**
+    * 新增全局主题组件 `Theme`、扁平化标签栏 `FlatTabbedPaneUI` 与下拉框 `FlatComboBoxUI`，重排 `主页`（`TabIndex`）、`视频详情页`（`TabVideo`）与 `下载页`（`TabDownload`）的圆角卡片布局与空状态提示。
+    * 主页直接提供「每页数量」（`10 / 20 / 30 / 40 / 60`）下拉切换，省去频繁改配置文件。
+    * 标签栏支持鼠标中键单击或左键双击关闭非固定标签页；选中标签自动加粗高亮。
+    * 默认采用柔和渐变背景，仅在用户主动放置 `config/background.png` 或 `config/background.jpg` 时以低透明度叠加自定义背景图。
+* **「UP 全部视频」批量面板与限流断点续拉**
+    * 新增 `TabUpAll`、`UpAllListFetcher` 与 `UpVideoItem`：支持输入 UP 空间链接或 3 位以上纯数字 `mid`，点击主页 **「UP 全部视频」** 即可分页拉取最多 `200` 页（`10,000` 条，单页 `50` 条）公开投稿到 `JTable` 表格。
+    * 支持按标题、发布日期、BV 号排序，按年份筛选（切换年份筛选不丢失已勾选 BV），对当前筛选视图执行 `全选` / `清空`，并按 `max(200ms, bilibili.download.period.between.query)` 间隔批量解析入队。
+    * 针对 `x/space/wbi/arc/search` 的风控限制（`-799`、`-352`、`-412`、`-509`、`HTTP 412` 等）：翻页默认保持至少 `300 ms` 间隔（同时遵守 `bilibili.download.period.between.query`），单页失败按 `1s / 2s / 3s` 退避重试 3 次，并自动回退到旧接口 `x/space/arc/search` 再试 1 次；若仍中断则完整保留已获取数据、展示具体原因，并启用 **「继续加载」** 支持从断点页续拉且按 BV 去重合并。
+* **`?full=1` 全量列表解析器**
+    * 新增 `URL4UPAllFullParser`（权重 `90`）：在空间链接后追加 `full=1`（或 `full=true`、`full=all`）时强制调用 `x/space/wbi/arc/search`（接口单页上限 `50` 条）按传统分页标签页解析。
+* **清晰度自动降级**
+    * 新增配置 `bilibili.download.quality.autoFallback`（默认 `true`）：当期望清晰度高于实际可用清晰度时，自动降级为实际最高可用画质并在日志输出原因，避免批量任务因 `QualityTooLowException` 中断。
+* **扫码兜底与启动脚本优化**
+    * 二维码登录（`LoginThread`）在弹出 `FrameQRCode` 窗口的同时，将二维码写入 `config/qr-login.png` 并尝试调用系统图片查看器兜底展示。
+    * 优化 `release/Double-Click-to-Run-for-Win.bat` 与 `...-debug.bat`：按 `minimal-bilibilidown-jre` → `runtime` → `JAVA_HOME` → `PATH` 顺序自动探测 Java，并自动兼容 `launch.jar` 与 `INeedBiliAV.jar`。
+
+---
+
+## 上游版本历史（nICEnnnnnnnLee/BilibiliDown）
+
 * V6.40 `2025-11-23`
     * 优化：自定义文件名功能增加集合的拥有者id`listOwnerId` #248
     * 修复：修复页数太大时UP主所有视频的解析问题 #282
@@ -12,7 +38,7 @@
     * 其它详见[V6.38...V6.39](https://github.com/nICEnnnnnnnLee/BilibiliDown/compare/V6.38...V6.39)
 * V6.38 `2024-12-22`
     * 修复：在查询清晰度时带上cookie，这是因为某些视频必须登录才能查看，比如`BV1fx411x7QS` #240
-    * 优化：对查询清晰度的API进行了升级，并增强了鲁棒性(虽然旧的也还能用)
+    * 优化：对查询清晰度的API进行了升级，并增强了容错性(虽然旧的也还能用)
     * 新增：提供多种清晰度查询策略，目的是减少不必要的网络请求次数
         + `tryNormalTypeFirst` 先尝试普通视频，报错后尝试其它类型; 绝大多数情况1次网络请求，少数2次。  
         + `judgeTypeFirst` 先判断视频类型，再进行查询; 2次网络请求。**这是旧版本的查询策略**。  
@@ -357,23 +383,6 @@
         + 注意：提示音播放在监视进程中进行，时间过长将阻塞线程，影响体验   
     * 优化: 将权重排序移至加载完毕后进行，而不必每次都要排序一遍  
     * 修复: 图片验证码接口增加`BiliDroid`字段  
-* 增加各版本release时间
-```
-query { 
-  user(login:"nICEnnnnnnnLee"){
-    repository(name:"BilibiliDown"){
-      createdAt,
-      releases(first:100, orderBy:{field:CREATED_AT, direction:DESC}){
-        nodes {
-          name,
-          createdAt,
-          publishedAt,
-        }
-      }
-    }
-  }
-}
-```   
 * V6.0 `2021-03-04`
 	* 添加登出(即注销登录状态)功能  
     * 添加下载完成后点赞功能(**【测试】**默认关闭，`bilibili.download.thumbUp = true`可打开)

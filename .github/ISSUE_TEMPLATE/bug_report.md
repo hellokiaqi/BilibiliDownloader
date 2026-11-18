@@ -1,31 +1,39 @@
 ---
-name: Bug report
-about: 请尽可能多地提供相关信息，高效交流
-title: ''
+name: Bug Report
+about: 反馈程序报错、解析失败或下载异常
+title: '[Bug] '
 labels: ''
 assignees: ''
-
 ---
 
-**我已经确认**
-- 使用的当前版本为最新版本
-- 使用最新的CI版本仍然存在该问题[CI传送门](https://github.com/nICEnnnnnnnLee/BilibiliDown/actions/workflows/pre-release-artifacts.yml)
-- issue区没有类似的情况（有的话请直接去该问题讨论）
-- 我已经阅读过[帮助文档](https://nicennnnnnnlee.github.io/BilibiliDown/guide/quick-start/what-is-BilibiliDown)/[备用帮助文档](https://bili.nicelee.top/BilibiliDown/guide/quick-start/what-is-BilibiliDown)
+### 提交前确认
 
-**问题描述**
-请尽量详细地描述问题，以告诉如何复现，方便定位问题。
+- [ ] 我已阅读 [README.zh-CN.md](../../README.zh-CN.md)、[USAGE_UP_ALL.md](../../USAGE_UP_ALL.md) 和 [常见问题 Q&A](../../release/wiki/Q&A.md)
+- [ ] 我已搜索过现有 Issues，没有重复问题
 
-**相关信息**
-+ 当前系统(windows/linux等)
-+ java版本
-+ 相关链接或者BV号
-+ 账号是否登录
-+ 在网页端观看是否存在问题
-+ 是否存在自定义parsers
-+ 相关log
-  + 如何抓log请参考[Wiki-How to log](https://github.com/nICEnnnnnnnLee/BilibiliDown/wiki/How-to-log)
+### 问题描述与复现步骤
 
-```
-请在发表issue前进行预览，将影响排版的内容放到这里
+请简要说明执行了哪些操作、期望结果是什么、实际发生了什么：
+
+1. 
+2. 
+3. 
+
+### 环境与输入信息
+
+- **操作系统**：（例如 Windows 11 x64 / macOS 15 arm64 / Ubuntu 24.04）
+- **Java 版本**：（运行 `java -version` 查看，例如 Temurin 1.8.0_422 / JDK 17）
+- **启动方式**：（例如 `Double-Click-to-Run-for-Win.bat` / 终端 `java -jar INeedBiliAV.jar` / 源码自编译）
+- **目标链接 / BV / mid**：
+- **账号登录状态**：已登录（普通用户 / 大会员）/ 未登录
+- **浏览器网页端访问该链接是否正常**：是 / 否
+
+### 控制台日志 / 报错堆栈
+
+> - **Windows**：双击运行 `release/Double-Click-to-Run-for-Win-debug.bat` 复现问题并复制控制台输出。
+> - **macOS / Linux**：在终端进入 `release/` 执行 `java -Dfile.encoding=utf-8 -Dhttps.protocols=TLSv1.2 -jar INeedBiliAV.jar` 复现问题并复制输出。
+> - **注意**：粘贴前请检查并删去任何个人 Cookie 或 `refresh_token` 敏感字段。
+
+```text
+请在此处粘贴相关报错日志
 ```
